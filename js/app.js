@@ -14,7 +14,7 @@ var LAST_COL = 5;
 
 /* GEM
  * A gem appears on the play field at random times.
- * The player will get points for standing on the gem.
+ * The player will get points for reaching the gem.
  */
 
 var Gem = function ()
