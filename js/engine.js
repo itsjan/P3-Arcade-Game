@@ -14,16 +14,17 @@
  * a little simpler to work with.
  */
 
-var Engine = (function(global) {
+
+var Engine = (function (global) {
     /* Predefine the variables we'll be using within this scope,
      * create the canvas element, grab the 2D context for that canvas
      * set the canvas elements height/width and add it to the DOM.
      */
     var doc = global.document,
-        win = global.window,
-        canvas = doc.createElement('canvas'),
-        ctx = canvas.getContext('2d'),
-        lastTime;
+            win = global.window,
+            canvas = doc.createElement('canvas'),
+            ctx = canvas.getContext('2d'),
+            lastTime;
 
     canvas.width = 505;
     canvas.height = 606;
@@ -40,7 +41,7 @@ var Engine = (function(global) {
          * computer is) - hurray time!
          */
         var now = Date.now(),
-            dt = (now - lastTime) / 1000.0;
+                dt = (now - lastTime) / 1000.0;
 
         /* Call our update/render functions, pass along the time delta to
          * our update function since it may be used for smooth animation.
@@ -79,7 +80,13 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
-        updateEntities(dt);
+        switch (game.stage) {
+            case game.S_PLAY:
+                game.update();
+                updateEntities(dt);
+                break;
+        }
+
         // checkCollisions();
     }
 
@@ -91,10 +98,11 @@ var Engine = (function(global) {
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
+        allEnemies.forEach(function (enemy) {
             enemy.update(dt);
         });
         player.update();
+        gem.update();
     }
 
     /* This function initially draws the "game level", it will then call
@@ -107,18 +115,32 @@ var Engine = (function(global) {
         /* This array holds the relative URL to the image used
          * for that particular row of the game level.
          */
-        var rowImages = [
-                'images/water-block.png',   // Top row is water
-                'images/stone-block.png',   // Row 1 of 3 of stone
-                'images/stone-block.png',   // Row 2 of 3 of stone
-                'images/stone-block.png',   // Row 3 of 3 of stone
-                'images/grass-block.png',   // Row 1 of 2 of grass
-                'images/grass-block.png'    // Row 2 of 2 of grass
-            ],
-            numRows = 6,
-            numCols = 5,
-            row, col;
+        var rowImages,
+                numRows = 6,
+                numCols = 5,
+                row, col;
+        switch (game.stage) {
+            case game.S_PLAY :
+                rowImages = [
+                    'images/water-block.png', // Top row is water
+                    'images/stone-block.png', // Row 1 of 3 of stone
+                    'images/stone-block.png', // Row 2 of 3 of stone
+                    'images/stone-block.png', // Row 3 of 3 of stone
+                    'images/grass-block.png', // Row 1 of 2 of grass
+                    'images/grass-block.png'    // Row 2 of 2 of grass
+                ];
+                break;
+            default:
+                rowImages = [
+                    'images/water-block.png', // Top row is water
+                    'images/water-block.png', // Row 1 of 3 of stone
+                    'images/water-block.png', // Row 2 of 3 of stone
+                    'images/stone-block.png', // Row 3 of 3 of stone
+                    'images/stone-block.png', // Row 1 of 2 of grass
+                    'images/stone-block.png'    // Row 2 of 2 of grass
+                ];
 
+        }
         /* Loop through the number of rows and columns we've defined above
          * and, using the rowImages array, draw the correct image for that
          * portion of the "grid"
@@ -136,8 +158,21 @@ var Engine = (function(global) {
             }
         }
 
+        switch (game.stage) {
+            case game.S_PLAY:
+                renderEntities();
+                renderOther();
+                break;
+            case game.S_SELECT_CHAR:
+                presentCharacters();
+                break;
+            case game.S_GAMEOVER:
+                presentCharacters();
+                renderOther();
+                break;
 
-        renderEntities();
+        }
+
     }
 
     /* This function is called by the render function and is called on each game
@@ -148,11 +183,76 @@ var Engine = (function(global) {
         /* Loop through all of the objects within the allEnemies array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
+        gem.render();
+        allEnemies.forEach(function (enemy) {
             enemy.render();
         });
-
         player.render();
+
+    }
+
+    function renderOther() {
+
+        ctx.font = "28px Impact";
+        ctx.textAlign = "center";
+        
+        /* LIVES */
+        ctx.fillStyle = ("red");
+        ctx.fillText(game.lives, 80, 105);
+
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        ctx.strokeText(game.lives, 80, 105);
+        
+        /* SCORE */
+        var score = "score: " + game.score + "   high: "+highscore;
+
+
+        ctx.fillStyle = ("yellow");
+        ctx.fillText(score, canvas.width / 2, 105);
+
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        ctx.strokeText(score, canvas.width / 2, 105);
+
+
+
+    }
+
+    function presentCharacters() {
+        //player.col = player.charSelect;
+        var characterImages = [
+            'images/char-boy.png',
+            'images/char-cat-girl.png',
+            'images/char-horn-girl.png',
+            'images/char-pink-girl.png',
+            'images/char-princess-girl.png'
+        ];
+        ctx.drawImage(Resources.get('images/Selector.png'), (player.col - 1) * 101, 4 * 83 - 40);
+        player.sprite = characterImages[player.col - 1];
+
+        player.charSelect = player.col - 1;
+        for (var i = 0; i < characterImages.length; i++)
+        {
+            if (i === player.charSelect)
+                offset = -25;
+            else
+                offset = -45;
+
+            ctx.drawImage(Resources.get(characterImages[i]), i * 101, 4 * 83 + offset);
+        }
+
+        ctx.font = "36px Impact";
+        ctx.textAlign = "center";
+        var text = "Hit Enter to play";
+        ctx.fillStyle = ("yellow");
+        ctx.fillText(text, canvas.width / 2, canvas.height / 2);
+
+        ctx.strokeStyle = "black";
+        ctx.lineWidth = 1;
+        ctx.strokeText(text, canvas.width / 2, canvas.height / 2);
+
+
     }
 
     /* This function does nothing but it could have been a good place to
@@ -172,9 +272,22 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/char-boy.png',
+        'images/char-cat-girl.png',
+        'images/char-horn-girl.png',
+        'images/char-pink-girl.png',
+        'images/char-princess-girl.png',
+        'images/Selector.png',
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png'
     ]);
     Resources.onReady(init);
+
+
+    function setStage(stage) {
+        this.stage = stage;
+    }
 
     /* Assign the canvas' context object to the global variable (the window
      * object when run in a browser) so that developer's can use it more easily
