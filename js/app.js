@@ -2,7 +2,7 @@ var Y_OFFSET = -25;  // adjust sprite position within tile
 var NUM_OF_ENEMY_ROWS = 3; // there are three rows of paved blocks
 var MIN_ENEMY_SPEED = 100; // enemy speed is at least 100 units
 var VARIABLE_ENEMY_SPEED = 250; //max num of speed units to be added to min speed
-var MIN_GEM_LIFE = 20;
+var MIN_GEM_LIFE = 50;
 var MAX_GEM_LIFE = 100;
 var ROW_HEIGHT = 83; // height of one row in pixels, used to calculate sprite y pos
 var COL_WIDTH = 101; // width of one column, used to calculate sprite x pos
@@ -151,7 +151,7 @@ Player.prototype.render = function () {
 Player.prototype.handleInput = function (key) {
     switch (key) {
         // for each key press, adjust row/column
-        // and prevent player moving off the screen 
+        // and prevent player moving off the screen
         case "up":
             this.row--;
             if (this.row < FIRST_ROW)
@@ -175,7 +175,7 @@ Player.prototype.handleInput = function (key) {
             break;
         case "enter": // starts the game
             if (game.stage === game.S_GAMEOVER || game.stage === game.S_SELECT_CHAR) {
-
+                player.reset();
                 game = new Game();
             }
             break;
