@@ -14,8 +14,8 @@ Game will start when you press Enter.
 ![alt text][select_char]
 [select_char]: https://github.com/itsjan/P3-Arcade-Game/blob/master/select_char.png "Character selection"
 
-You initially have three lives. Game will end when you run out of lifes.
-Move your play character on the play field using arrow keys.
+You initially have three lives. Game will end when you run out of lives.
+Move your character on the play field using arrow keys.
 
 Bugs are your enemies, and they move across the play field at varying speeds.
 Colliding with a bug will cost you one life.
