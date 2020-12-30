@@ -11,7 +11,7 @@ How to play?
 First, select a play character using left and right arrow keys.
 Game will start when you press Enter.
 
-[select_char]: https://github.com/itsjan/P3-Arcade-Game/blob/master/select_char.png "Character selection"
+![select_char](https://github.com/itsjan/P3-Arcade-Game/blob/master/select_char.png)
 
 You initially have three lives. Game will end when you run out of lives.
 Move your character on the play field using arrow keys.
@@ -25,8 +25,8 @@ A gem will appear on the play field at random times. Reach the gem to add to you
 
 Press the S key at any time to change your play character.
 
-![alt text][play]
-[play]: https://github.com/itsjan/P3-Arcade-Game/blob/master/play.png "Play"
+
+![play](https://github.com/itsjan/P3-Arcade-Game/blob/master/play.png)
 
 
 
