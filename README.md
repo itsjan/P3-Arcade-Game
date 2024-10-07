@@ -41,9 +41,18 @@ Press the S key at any time to change your play character.
 ![play](https://github.com/itsjan/P3-Arcade-Game/blob/master/play.png)
 
 
+### 1.15: Homework
+Create Dockerfile for an application or any other dockerised project in any of your own repositories and publish it to Docker Hub. This can be any project, except the clones or forks of backend-example or frontend-example.
+
+For this exercise to be complete you have to provide the link to the project in Docker Hub, make sure you at least have a basic description and instructions for how to run the application in a README that's available through your submission.
+
+**Solution**
+Containerised project in Docker Hub:
+<https://hub.docker.com/repository/docker/itsjan/arcade-game/general>
 
 
 
-
-
-
+```bash
+docker run -d -p 8080:80 itsjan/arcade-game
+```
+Point your browser to <http://localhost:8080> to start the game.
