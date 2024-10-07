@@ -13,7 +13,7 @@ docker build -t arcade-game .
 ```
 run the image:
 ```bash
-docker run -d -p 8080:80 arcade-game --build
+docker run -d -p 8080:80 arcade-game 
 ```
 Point your browser to <http://localhost:8080> to start the game.
 
