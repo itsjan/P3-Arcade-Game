@@ -5,6 +5,18 @@ How to run the game?
 --------------------
 Simply open index.html using a browser, and the game will load.
 
+Docker deployment
+-----------------
+Build the image:
+```bash
+docker build -t arcade-game .
+```
+run the image:
+```bash
+docker run -d -p 8080:80 arcade-game --build
+```
+Point your browser to <http://localhost:8080> to start the game.
+
 How to play?
 ------------
 
