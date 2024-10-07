@@ -56,3 +56,55 @@ Containerised project in Docker Hub:
 docker run -d -p 8080:80 itsjan/arcade-game
 ```
 Point your browser to <http://localhost:8080> to start the game.
+
+### Exercise 1.16: Cloud deployment
+It is time to wrap up this part and run a containerized app in the cloud.
+
+You can take any web-app, eg. an example or exercise from this part, your own app, or even the course material (see devopsdockeruh/coursepage) and deploy it to some cloud provider.
+
+Submit the Dockerfile, a brief description of what you did, and a link to the running app.
+
+**Solution**
+
+Link to running app:
+<https://arcade-game-2c2k.onrender.com>
+
+
+Dockerfile
+```dockerfile
+FROM nginx
+
+WORKDIR /usr/share/nginx/html
+
+COPY . .
+
+```
+
+Building the image for Render:
+Note: Images must be built with the platform linux/amd64.
+```bash
+docker buildx build --platform linux/amd64 --tag itsjan/arcade-game:latest .
+```
+Next, log in to Docker, and push the image to Docker Hub
+```bash
+docker login
+
+docker push 
+
+docker push itsjan/arcade-game:latest
+```
+
+
+
+**Steps taked in Render:**
+
+
+
+as per [documentation ](https://docs.render.com/deploy-an-image)
+1. Go to <https://dashboard.render.com/>
+2. Select New --> Web Service
+3. Enter the name of the image, eg. `itsjan/arcade-game`, select 'Next'
+4. Select Instance Type 'Hobbyist' for free service
+5. Select 'Deloy Web Service' 
+
+It will take a while to spin up the service. Once completed, the app can be accessed using the link shown on the page.
