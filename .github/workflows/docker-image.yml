@@ -1,0 +1,38 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  publish-docker-hub:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - uses: actions/checkout@v4
+    #- name: Build the Docker image
+    #  run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Login to Docker Hub
+      uses: docker/login-action@v3
+      with: 
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    - name: Build and Push
+      uses: docker/build-push-action@v6
+      with:
+        push: true
+        tags: itsjan/arcade-game:latest
+    - name: Invoke Render deploy action
+  # You may pin to the exact commit or the version.
+  # uses: fjogeleit/http-request-action@ed8a1c36dbb357b7c5dd869722ae4d0018ff07e8
+      uses: fjogeleit/http-request-action@v1.15.5
+      with:
+        # Request URL
+        url: ${{ secrets.RENDER_DEPLOY_HOOK}}
+        # Request Method
+        method: GET # optional, default is POST
